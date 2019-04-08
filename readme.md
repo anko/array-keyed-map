@@ -85,7 +85,7 @@ garbage-collected, even if the objects used as keys go out of scope!
 
  - Because even an empty `Object` [has properties on
    it](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-   (e.g. `length`), your stored keys might accidentally overwrite, causing
+   (e.g. `length`) which your stored keys might accidentally overwrite, causing
    subtle bugs.
 
  - Because you might want your array to contain objects rather than strings,
@@ -100,7 +100,8 @@ IE, of course.
 
 ### Does this implement the full `Map` API?
 
-No.  I'd take a PR though! :stars:
+No.  See [related issue](https://github.com/anko/array-keyed-map/issues/1).
+I'd take a PR though! :stars:
 
 ## License
 
