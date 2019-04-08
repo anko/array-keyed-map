@@ -6,7 +6,21 @@
   "scripts": {
     "test": "node test.js"
   },
-  "keywords": ["object", "map", "array", "path", "compound key"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anko/array-keyed-map.git"
+  },
+  "homepage": "https://github.com/anko/array-keyed-map",
+  "bugs": {
+    "url": "https://github.com/anko/array-keyed-map/issues"
+  },
+  "keywords": [
+    "object",
+    "map",
+    "array",
+    "path",
+    "compound key"
+  ],
   "author": "Antti Korpi <an@cyan.io> (https://cyan.io)",
   "license": "ISC",
   "devDependencies": {
