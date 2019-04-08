@@ -1,0 +1,15 @@
+{
+  "name": "array-keyed-map",
+  "version": "1.0.0",
+  "description": "a map from arrays of values to values",
+  "main": "main.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": ["object", "map", "array", "path", "compound key"],
+  "author": "Antti Korpi <an@cyan.io> (https://cyan.io)",
+  "license": "ISC",
+  "devDependencies": {
+    "tape": "^4.10.1"
+  }
+}
