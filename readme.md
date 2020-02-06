@@ -20,8 +20,8 @@ m.get(['a', ''])        => 3
 m.get(['a'])            => 4
 ```
 
-You can use arbitrary JavaScript values as array elements and as values.  Array
-elements are treated by identity, like `Map` does.
+You can use arbitrary JavaScript values as array elements and as values.
+Non-primitive key-array elements are treated by identity, like `Map` does.
 
 ## API
 
@@ -73,23 +73,26 @@ garbage-collected, even if the objects used as keys go out of scope!
 
 ### Why is this better than `.join('/')`ing the keys and using a regular object?
 
- - Because your array elements might have `/`s in them.  For example, the array
-   `['a/b']` and `['a', 'b']` would both resolve to the array `a/b`.
+ - Because your key array's elements might have `/`s in them.  For example, the
+   arrays `['a/b']` and `['a', 'b']` would both resolve to the key `a/b`.
 
    So use something other than a `/`?  Sure, but then you have the same problem
    with elements possibly containing *that*.
 
-   So use a sufficiently long unguessable string like
+   So use a sufficiently long probabilistically unguessable string like
    `03f2a8291a700b95904190583dba17c4ae1bf3bdfc2834391d60985ac6724940`?  That
-   that wastes RAM/disk when you have many long arrays.
+   wastes RAM/disk when you have many long arrays.  And also what the heck are
+   you doing, that's illegal.
 
- - Because even an empty `Object` [has properties on
+ - Because even an empty `Object` [has built-in properties on
    it](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-   (e.g. `length`) which your stored keys might accidentally overwrite, causing
-   subtle bugs.
+   (e.g. `length`, or `getOwnPropertyNames`), which your keys might
+   accidentally overwrite, causing subtle bugs down the line.
 
- - Because you might want your array to contain objects rather than strings,
-   and objects are inefficient to stringify, frequently even impossible.
+ - Because you might want your key array to contain objects (by identity)
+   rather than strings.  Objects are difficult or impossible to stringify (e.g.
+   they may contain cyclic references), and even then two distinct objects with
+   identical contents would stringify to the same value and cause subtle bugs.
 
 ### What version of JS does this rely on?
 
