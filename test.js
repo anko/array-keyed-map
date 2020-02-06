@@ -1,8 +1,8 @@
 const test = require('tape')
-const pko = require('./main.js')
+const akm = require('./main.js')
 
 test('empty', (t) => {
-  const p = pko()
+  const p = akm()
   t.ok('function' === typeof p.set, 'set is a function')
   t.ok('function' === typeof p.get, 'get is a function')
   t.same(
@@ -13,7 +13,7 @@ test('empty', (t) => {
 })
 
 test('set/get path len 0', (t) => {
-  const p = pko()
+  const p = akm()
   p.set([], true)
   t.same(p.get([]), true)
   t.end()
@@ -21,21 +21,21 @@ test('set/get path len 0', (t) => {
 
 
 test('set/get path len 1', (t) => {
-  const p = pko()
+  const p = akm()
   p.set(['a'], true)
   t.same(p.get(['a']), true)
   t.end()
 })
 
 test('set/get path len 2', (t) => {
-  const p = pko()
+  const p = akm()
   p.set(['a', 'b'], true)
   t.same(p.get(['a', 'b']), true)
   t.end()
 })
 
 test('empty strings are ok', (t) => {
-  const p = pko()
+  const p = akm()
   p.set(['', ''], true)
   t.same(p.get(['']), undefined)
   t.same(p.get(['', '']), true)
@@ -59,7 +59,7 @@ test('any objects work as keys or values', (t) => {
     () => {},
   ]
 
-  const p = pko()
+  const p = akm()
   const str = (x) => Object.prototype.toString.call(x).slice(8, -1)
 
   // Try all combinations of two things from the pool of objects as array elements, and values
@@ -100,8 +100,8 @@ test('any objects work as keys or values', (t) => {
   t.end()
 })
 
-test('delete empty path', (t) => {
-  const p = pko()
+test('set and delete empty path', (t) => {
+  const p = akm()
 
   p.set([], true)
 
@@ -112,7 +112,7 @@ test('delete empty path', (t) => {
 })
 
 test('delete longer paths', (t) => {
-  const p = pko()
+  const p = akm()
 
   const paths = [
     [],
@@ -132,7 +132,7 @@ test('delete longer paths', (t) => {
 })
 
 test(`deleting longer paths doesn't affect prefixes`, (t) => {
-  const p = pko()
+  const p = akm()
 
   p.set(['a', 'b'], 'ab')
   p.set(['a'], 'a')
@@ -144,7 +144,7 @@ test(`deleting longer paths doesn't affect prefixes`, (t) => {
 })
 
 test(`deleting shorter paths doesn't affect longer continuations`, (t) => {
-  const p = pko()
+  const p = akm()
 
   p.set(['a', 'b'], 'ab')
   p.set(['a'], 'a')
