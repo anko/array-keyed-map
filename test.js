@@ -154,3 +154,17 @@ test(`deleting shorter paths doesn't affect longer continuations`, (t) => {
 
   t.end()
 })
+
+test(`has`, (t) => {
+  const p = akm()
+
+  p.set(['a', 'b'], 'ab')
+
+  t.same(p.has(['a', 'b']), true)
+  t.same(p.has(['a']), false)
+
+  p.set(['a'], 'a')
+  t.same(p.has(['a']), true)
+
+  t.end()
+})

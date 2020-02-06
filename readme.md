@@ -48,6 +48,14 @@ itself is irrelevant.
 
 **Returns** `undefined`.
 
+### `akmap.has(array)`
+
+**Arguments:**
+
+ - `array`: `Array` of values
+
+**Returns** a Boolean: whether a previously set value exists for that key array.
+
 ### `akmap.get(array)`
 
 **Arguments:**

@@ -28,6 +28,25 @@ let pathStore = () => {
     }
   }
 
+  let has = (path, store) => {
+    store = store || rootStore
+
+    switch (path.length) {
+      case 0:
+        return store.has(trunkSymbol)
+        break
+      default:
+        const [next, ...rest] = path
+        let nextStore = store.get(next)
+        if (nextStore) {
+          return has(rest, nextStore)
+        } else {
+          return false
+        }
+        break
+    }
+  }
+
   let get = (path, store) => {
     store = store || rootStore
 
@@ -69,7 +88,7 @@ let pathStore = () => {
     }
   }
 
-  return { set, get, delete:del }
+  return { set, has, get, delete:del }
 }
 
 module.exports = pathStore
