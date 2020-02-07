@@ -1,9 +1,10 @@
-let trunkSymbol = Symbol('path-store-trunk')
+let dataSymbol = Symbol('path-store-trunk')
 
 // We keep a tree that represents potential paths through the object.  Each
 // tree node is a Map with a Symbol key that corresponds to the value stored at
 // the path terminating at this node.  All the other keys refer to further
-// nodes in the path.
+// nodes in the path.  The data key being a symbol ensures the user-provided
+// keys cannot collide with it.
 
 let pathStore = () => {
 
@@ -15,8 +16,8 @@ let pathStore = () => {
 
     switch (path.length) {
       case 0:
-        if (!store.has(trunkSymbol)) size += 1
-        store.set(trunkSymbol, value)
+        if (!store.has(dataSymbol)) size += 1
+        store.set(dataSymbol, value)
         break
       default:
         const [next, ...rest] = path
@@ -35,7 +36,7 @@ let pathStore = () => {
 
     switch (path.length) {
       case 0:
-        return store.has(trunkSymbol)
+        return store.has(dataSymbol)
         break
       default:
         const [next, ...rest] = path
@@ -54,7 +55,7 @@ let pathStore = () => {
 
     switch (path.length) {
       case 0:
-        return store.get(trunkSymbol)
+        return store.get(dataSymbol)
         break
       default:
         const [next, ...rest] = path
@@ -73,7 +74,7 @@ let pathStore = () => {
 
     switch (path.length) {
       case 0:
-        store.delete(trunkSymbol)
+        store.delete(dataSymbol)
         size -= 1
         break
       default:
