@@ -11,8 +11,7 @@ let pathStore = () => {
   let rootStore = new Map()
   let size = 0
 
-  let set = (path, value, store) => {
-    store = store || rootStore
+  let set = (path, value, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -31,8 +30,7 @@ let pathStore = () => {
     }
   }
 
-  let has = (path, store) => {
-    store = store || rootStore
+  let has = (path, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -50,8 +48,7 @@ let pathStore = () => {
     }
   }
 
-  let get = (path, store) => {
-    store = store || rootStore
+  let get = (path, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -69,8 +66,7 @@ let pathStore = () => {
     }
   }
 
-  let del = (path, store) => {
-    store = store || rootStore
+  let del = (path, store=rootStore) => {
 
     switch (path.length) {
       case 0:
