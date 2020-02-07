@@ -75,16 +75,15 @@ let pathStore = () => {
       case 0:
         store.delete(trunkSymbol)
         size -= 1
-        //console.log('store now size', store.size)
         break
       default:
         const [next, ...rest] = path
         let nextStore = store.get(next)
         if (nextStore) {
           del(rest, nextStore)
+          // If the next store is now empty, prune it
           if (!nextStore.size) {
             store.delete(next)
-            //console.log('deleting store at', next)
           }
         }
         break
