@@ -8,12 +8,14 @@ let trunkSymbol = Symbol('path-store-trunk')
 let pathStore = () => {
 
   let rootStore = new Map()
+  let size = 0
 
   let set = (path, value, store) => {
     store = store || rootStore
 
     switch (path.length) {
       case 0:
+        if (!store.has(trunkSymbol)) size += 1
         store.set(trunkSymbol, value)
         break
       default:
@@ -72,6 +74,7 @@ let pathStore = () => {
     switch (path.length) {
       case 0:
         store.delete(trunkSymbol)
+        size -= 1
         //console.log('store now size', store.size)
         break
       default:
@@ -88,7 +91,9 @@ let pathStore = () => {
     }
   }
 
-  return { set, has, get, delete:del }
+  let store = { set, has, get, delete:del }
+  Object.defineProperty(store, 'size', { get: () => size })
+  return store
 }
 
 module.exports = pathStore

@@ -168,3 +168,24 @@ test(`has`, (t) => {
 
   t.end()
 })
+
+test('size', (t) => {
+  const p = akm()
+
+  p.set(['a', 'b', 'c'], 'abc')
+  t.same(p.size, 1)
+
+  p.set(['a'], 'a')
+  t.same(p.size, 2)
+
+  p.set(['a', 'd'], 'ad')
+  t.same(p.size, 3)
+
+  p.delete(['a'])
+  t.same(p.size, 2)
+
+  p.size = 0
+  t.same(p.size, 2)
+
+  t.end()
+})
