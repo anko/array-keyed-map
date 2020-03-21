@@ -190,7 +190,7 @@ test('size', (t) => {
   t.end()
 })
 
-test('entries', (t) => {
+test('iterators', (t) => {
   const p = akm()
 
   const key1 = []
@@ -209,13 +209,25 @@ test('entries', (t) => {
   const value4 = 'ba'
   p.set(key4, value4)
 
-  const iterator = p.entries()
-  t.same(iterator.next().value, [key1, value1])
-  t.same(iterator.next().value, [key2, value2])
-  // Note that these are not the order in which they were added!  This module
-  // doesn't guarantee iteration in insertion order!
-  t.same(iterator.next().value, [key4, value4])
-  t.same(iterator.next().value, [key3, value3])
+  // Note that entries 3 and 4 come in the opposite order in every iterator.
+  // This is OK, because this module doesn't guarantee iteration order.
+  test('entries', (t) => {
+    const iterator = p.entries()
+    t.same(iterator.next().value, [key1, value1])
+    t.same(iterator.next().value, [key2, value2])
+    t.same(iterator.next().value, [key4, value4])
+    t.same(iterator.next().value, [key3, value3])
+    t.end()
+  })
+
+  test('@@iterator', (t) => {
+    const a = Array.from(p)
+    t.same(a[0], [key1, value1])
+    t.same(a[1], [key2, value2])
+    t.same(a[2], [key4, value4])
+    t.same(a[3], [key3, value3])
+    t.end()
+  })
 
   t.end()
 })

@@ -34,6 +34,9 @@ const akmap = arrayKeyedMap()
 
 The constructor takes no arguments.
 
+Array keyed maps are iterable, so you can use them in `for`-loops, or pass them
+to `Array.from`, etc.
+
 ### `akmap.set(array, value)`
 
 **Arguments:**

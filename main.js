@@ -97,7 +97,9 @@ let pathStore = () => {
     }
   }
 
-  let store = { set, has, get, delete:del, entries }
+  let store = { set, has, get, delete:del,
+    entries,
+    [Symbol.iterator]: entries }
   Object.defineProperty(store, 'size', { get: () => size })
   return store
 }
