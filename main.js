@@ -89,7 +89,7 @@ let pathStore = () => {
 
   let entries = function* (path=[], store=rootStore) {
 
-    for (let [key, value] of store) {
+    for (const [key, value] of store) {
       if (key === dataSymbol) yield [path, value]
       else {
         yield* entries(path.concat([key]), value)
@@ -97,9 +97,20 @@ let pathStore = () => {
     }
   }
 
+  let keys = function* () {
+    for (const [k, v] of entries()) yield k
+  }
+
+  let values = function* () {
+    for (const [k, v] of entries()) yield v
+  }
+
   let store = { set, has, get, delete:del,
     entries,
-    [Symbol.iterator]: entries }
+    [Symbol.iterator]: entries,
+    keys,
+    values,
+  }
   Object.defineProperty(store, 'size', { get: () => size })
   return store
 }

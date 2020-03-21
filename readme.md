@@ -82,10 +82,25 @@ garbage-collected, even if the objects used as keys go out of scope!
 
 ### `akmap.entries()`
 
-**Returns** An iterator that yields `[key, value]` for every entry in `akmap`.
+**Returns** an iterator that yields `[key, value]` for every entry in `akmap`.
 
-:warning: Note that these entries are in *arbitrary order; __not__ insertion
-order*!  This differs from the basic `Map`!
+:warning: Note that these are in *arbitrary order; __not__ insertion order*!
+This differs from the basic `Map`!
+
+### `akmap.keys()`
+
+**Returns** an iterator that yields the key part (type `Array`) of each entry
+in `akmap`.
+
+:warning: Note that these are in *arbitrary order; __not__ insertion order*!
+This differs from the basic `Map`!
+
+### `akmap.keys()`
+
+**Returns** an iterator that yields the value part of each entry in `akmap`.
+
+:warning: Note that these are in *arbitrary order; __not__ insertion order*!
+This differs from the basic `Map`!
 
 ## FAQ
 

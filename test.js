@@ -229,5 +229,23 @@ test('iterators', (t) => {
     t.end()
   })
 
+  test('keys', (t) => {
+    const iterator = p.keys()
+    t.same(iterator.next().value, key1)
+    t.same(iterator.next().value, key2)
+    t.same(iterator.next().value, key4)
+    t.same(iterator.next().value, key3)
+    t.end()
+  })
+
+  test('values', (t) => {
+    const iterator = p.values()
+    t.same(iterator.next().value, value1)
+    t.same(iterator.next().value, value2)
+    t.same(iterator.next().value, value4)
+    t.same(iterator.next().value, value3)
+    t.end()
+  })
+
   t.end()
 })
