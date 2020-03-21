@@ -284,4 +284,11 @@ test('iterators', (t) => {
   })
 
   t.end()
+
+})
+
+test('constructor property', (t) => {
+  const p = akm()
+  t.same(p.constructor, akm)
+  t.end()
 })

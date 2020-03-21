@@ -117,6 +117,7 @@ const construct = () => {
   const store = {
     // Query and modification
     set, has, get, delete:del, clear,
+    constructor: construct,
 
     // Iterators
     entries,
