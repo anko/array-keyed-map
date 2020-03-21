@@ -1,8 +1,12 @@
 # array-keyed-map [![](https://img.shields.io/npm/v/array-keyed-map.svg?style=flat-square)](https://www.npmjs.com/package/array-keyed-map) [![](https://img.shields.io/travis/anko/array-keyed-map.svg?style=flat-square)](https://travis-ci.org/anko/array-keyed-map) [![](https://img.shields.io/david/anko/array-keyed-map?style=flat-square)](https://david-dm.org/anko/array-keyed-map)
 
-A map where the keys are arrays of arbitrary values.  Works with any JavaScript
-value.  Uses the actual identity of the key values, not some fragile
-string-serialisation hack.
+A map which keys are arrays of arbitrary values.  Uses the actual identity of
+the key array entries like `Map` does; not some fragile string-serialisation
+hack.
+
+Good for storing property-paths through objects.
+
+Implements all `Map` methods, but *does not remember insertion order*.
 
 ## Example
 
@@ -19,9 +23,6 @@ m.get(['a', 'b', true]) => 2
 m.get(['a', ''])        => 3
 m.get(['a'])            => 4
 ```
-
-You can use arbitrary JavaScript values as array elements and as values.
-Non-primitive key-array elements are treated by identity, like `Map` does.
 
 ## API
 
