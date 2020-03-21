@@ -1,4 +1,4 @@
-let dataSymbol = Symbol('path-store-trunk')
+const dataSymbol = Symbol('path-store-trunk')
 
 // We keep a tree that represents potential paths through the object.  Each
 // tree node is a Map with a Symbol key that corresponds to the value stored at
@@ -6,12 +6,12 @@ let dataSymbol = Symbol('path-store-trunk')
 // nodes in the path.  The data key being a symbol ensures the user-provided
 // keys cannot collide with it.
 
-let pathStore = () => {
+const construct = () => {
 
-  let rootStore = new Map()
+  const rootStore = new Map()
   let size = 0
 
-  let set = (path, value, store=rootStore) => {
+  const set = (path, value, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -30,7 +30,7 @@ let pathStore = () => {
     }
   }
 
-  let has = (path, store=rootStore) => {
+  const has = (path, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -38,7 +38,7 @@ let pathStore = () => {
         break
       default:
         const [next, ...rest] = path
-        let nextStore = store.get(next)
+        const nextStore = store.get(next)
         if (nextStore) {
           return has(rest, nextStore)
         } else {
@@ -48,7 +48,7 @@ let pathStore = () => {
     }
   }
 
-  let get = (path, store=rootStore) => {
+  const get = (path, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -56,7 +56,7 @@ let pathStore = () => {
         break
       default:
         const [next, ...rest] = path
-        let nextStore = store.get(next)
+        const nextStore = store.get(next)
         if (nextStore) {
           return get(rest, nextStore)
         } else {
@@ -66,7 +66,7 @@ let pathStore = () => {
     }
   }
 
-  let del = (path, store=rootStore) => {
+  const del = (path, store=rootStore) => {
 
     switch (path.length) {
       case 0:
@@ -75,7 +75,7 @@ let pathStore = () => {
         break
       default:
         const [next, ...rest] = path
-        let nextStore = store.get(next)
+        const nextStore = store.get(next)
         if (nextStore) {
           del(rest, nextStore)
           // If the next store is now empty, prune it
@@ -87,12 +87,12 @@ let pathStore = () => {
     }
   }
 
-  let clear = () => {
+  const clear = () => {
     rootStore.clear()
     size = 0
   }
 
-  let entries = function* (path=[], store=rootStore) {
+  const entries = function* (path=[], store=rootStore) {
 
     for (const [key, value] of store) {
       if (key === dataSymbol) yield [path, value]
@@ -102,19 +102,23 @@ let pathStore = () => {
     }
   }
 
-  let keys = function* () {
+  const keys = function* () {
     for (const [k, v] of entries()) yield k
   }
 
-  let values = function* () {
+  const values = function* () {
     for (const [k, v] of entries()) yield v
   }
 
-  let forEach = (callback, thisArg) => {
+  const forEach = (callback, thisArg) => {
     for (const [k, v] of entries()) callback.call(thisArg, v, k, store)
   }
 
-  let store = { set, has, get, delete:del, clear,
+  const store = {
+    // Query and modification
+    set, has, get, delete:del, clear,
+
+    // Iterators
     entries,
     [Symbol.iterator]: entries,
     keys,
@@ -125,4 +129,4 @@ let pathStore = () => {
   return store
 }
 
-module.exports = pathStore
+module.exports = construct
