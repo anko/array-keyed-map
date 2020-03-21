@@ -87,7 +87,17 @@ let pathStore = () => {
     }
   }
 
-  let store = { set, has, get, delete:del }
+  let entries = function* (path=[], store=rootStore) {
+
+    for (let [key, value] of store) {
+      if (key === dataSymbol) yield [path, value]
+      else {
+        yield* entries(path.concat([key]), value)
+      }
+    }
+  }
+
+  let store = { set, has, get, delete:del, entries }
   Object.defineProperty(store, 'size', { get: () => size })
   return store
 }

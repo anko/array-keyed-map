@@ -189,3 +189,33 @@ test('size', (t) => {
 
   t.end()
 })
+
+test('entries', (t) => {
+  const p = akm()
+
+  const key1 = []
+  const value1 = 'empty path'
+  p.set(key1, value1)
+
+  const key2 = ['b']
+  const value2 = 'b'
+  p.set(key2, value2)
+
+  const key3 = ['a']
+  const value3 = 'a'
+  p.set(key3, value3)
+
+  const key4 = ['b', 'a']
+  const value4 = 'ba'
+  p.set(key4, value4)
+
+  const iterator = p.entries()
+  t.same(iterator.next().value, [key1, value1])
+  t.same(iterator.next().value, [key2, value2])
+  // Note that these are not the order in which they were added!  This module
+  // doesn't guarantee iteration in insertion order!
+  t.same(iterator.next().value, [key4, value4])
+  t.same(iterator.next().value, [key3, value3])
+
+  t.end()
+})

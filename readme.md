@@ -77,6 +77,13 @@ garbage-collected, even if the objects used as keys go out of scope!
 
 **Returns** `undefined`.
 
+### `akmap.entries()`
+
+**Returns** An iterator that yields `[key, value]` for every entry in `akmap`.
+
+:warning: Note that these entries are in *arbitrary order; __not__ insertion
+order*!  This differs from the basic `Map`!
+
 ## FAQ
 
 ### Why is this better than `.join('/')`ing the keys and using a regular object?
