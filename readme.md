@@ -4,8 +4,6 @@ A map which keys are arrays of arbitrary values.  Uses the actual identity of
 the key array entries like `Map` does; not some fragile string-serialisation
 hack.
 
-Good for storing property-paths through objects.
-
 Implements all `Map` methods, but *does not remember insertion order*.
 
 ## Example
@@ -102,7 +100,7 @@ in `akmap`.
 :warning: Note that these are in *arbitrary order; __not__ insertion order*!
 This differs from the basic `Map`!
 
-### `akmap.keys()`
+### `akmap.values()`
 
 **Returns** an iterator that yields the value part of each entry in `akmap`.
 
@@ -122,6 +120,19 @@ This differs from the basic `Map`!
 
 :warning: Note that these are in *arbitrary order; __not__ insertion order*!
 This differs from the basic `Map`!
+
+## Performance characteristics
+
+`get`, `has`, `set`, and `delete` are all `O(n)` with key array length `n`.  I
+believe this is optimal; O(1) would require the JS runtime to expose the
+identity of all objects as hashable values, which is not currently possible.
+
+Stores paths in a tree structure, to conserve memory when key arrays share a
+prefix.  This means `entries`, `keys`, `values`, and `forEach` are `O(n)` with
+`n` total length of all keys of all entries, only counting shared key-array
+prefixes once.
+
+`clear` is `O(1)`.
 
 ## FAQ
 
