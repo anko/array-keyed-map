@@ -87,6 +87,11 @@ let pathStore = () => {
     }
   }
 
+  let clear = () => {
+    rootStore.clear()
+    size = 0
+  }
+
   let entries = function* (path=[], store=rootStore) {
 
     for (const [key, value] of store) {
@@ -109,7 +114,7 @@ let pathStore = () => {
     for (const [k, v] of entries()) callback.call(thisArg, v, k, store)
   }
 
-  let store = { set, has, get, delete:del,
+  let store = { set, has, get, delete:del, clear,
     entries,
     [Symbol.iterator]: entries,
     keys,

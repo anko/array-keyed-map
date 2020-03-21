@@ -190,6 +190,24 @@ test('size', (t) => {
   t.end()
 })
 
+test('clear', (t) => {
+  const p = akm()
+
+  p.set(['a', 'b', 'c'], 'abc')
+  p.set(['a'], 'a')
+  p.set(['a', 'd'], 'ad')
+  t.same(p.size, 3)
+
+  p.clear()
+
+  t.same(p.size, 0)
+  t.same(p.has(['a', 'b', 'c']), false)
+  t.same(p.has(['a']), false)
+  t.same(p.has(['a', 'd']), false)
+
+  t.end()
+})
+
 test('iterators', (t) => {
   const p = akm()
 

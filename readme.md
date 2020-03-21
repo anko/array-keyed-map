@@ -80,6 +80,12 @@ garbage-collected, even if the objects used as keys go out of scope!
 
 **Returns** `undefined`.
 
+### `akmap.clear()`
+
+Deletes all entries from `akmap`.
+
+**Returns** `undefined`.
+
 ### `akmap.entries()`
 
 **Returns** an iterator that yields `[key, value]` for every entry in `akmap`.
