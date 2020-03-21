@@ -105,11 +105,16 @@ let pathStore = () => {
     for (const [k, v] of entries()) yield v
   }
 
+  let forEach = (callback, thisArg) => {
+    for (const [k, v] of entries()) callback.call(thisArg, v, k, store)
+  }
+
   let store = { set, has, get, delete:del,
     entries,
     [Symbol.iterator]: entries,
     keys,
     values,
+    forEach,
   }
   Object.defineProperty(store, 'size', { get: () => size })
   return store

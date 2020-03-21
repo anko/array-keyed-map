@@ -247,5 +247,23 @@ test('iterators', (t) => {
     t.end()
   })
 
+  test('forEach', (t) => {
+    let kvs = []
+    let thisValue = {}
+    let forEachReturnValue = p.forEach(
+      function () {
+        kvs.push({ thisValue: this, args: Array.from(arguments) })
+      },
+      thisValue)
+    t.same(forEachReturnValue, undefined)
+    t.same(kvs, [
+      { thisValue: thisValue, args: [ value1, key1, p ] },
+      { thisValue: thisValue, args: [ value2, key2, p ] },
+      { thisValue: thisValue, args: [ value4, key4, p ] },
+      { thisValue: thisValue, args: [ value3, key3, p ] },
+    ])
+    t.end()
+  })
+
   t.end()
 })

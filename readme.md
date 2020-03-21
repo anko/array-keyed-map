@@ -102,6 +102,20 @@ This differs from the basic `Map`!
 :warning: Note that these are in *arbitrary order; __not__ insertion order*!
 This differs from the basic `Map`!
 
+### `akmap.forEach(callback[, thisArg])`
+
+**Arguments**:
+
+ - `callback`:  `Function` that will be called for each entry in `akmap`,
+   passing the value, key, and map as arguments.
+ - (optional) `thisArg`: `Object` passed to the `callback` as the value for
+   `this`.
+
+**Returns** `undefined`.
+
+:warning: Note that these are in *arbitrary order; __not__ insertion order*!
+This differs from the basic `Map`!
+
 ## FAQ
 
 ### Why is this better than `.join('/')`ing the keys and using a regular object?
