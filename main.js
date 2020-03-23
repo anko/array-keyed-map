@@ -117,7 +117,6 @@ const construct = () => {
   const store = {
     // Query and modification
     set, has, get, delete:del, clear,
-    constructor: construct,
 
     // Iterators
     entries,
@@ -125,6 +124,10 @@ const construct = () => {
     keys,
     values,
     forEach,
+
+    // Meta
+    constructor: construct,
+    get [Symbol.toStringTag] () { return 'ArrayKeyedMap' },
   }
   Object.defineProperty(store, 'size', { get: () => size })
   return store

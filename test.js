@@ -292,3 +292,9 @@ test('constructor property', (t) => {
   t.same(p.constructor, akm)
   t.end()
 })
+
+test('@@toStringTag property', (t) => {
+  const p = akm()
+  t.same(Object.prototype.toString.call(p), "[object ArrayKeyedMap]")
+  t.end()
+})
