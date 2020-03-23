@@ -298,3 +298,13 @@ test('@@toStringTag property', (t) => {
   t.same(Object.prototype.toString.call(p), "[object ArrayKeyedMap]")
   t.end()
 })
+
+test('construct copy by passing entries of previous to constructor', (t) => {
+  const p1 = akm()
+  p1.set(['a', 'b'], 'ab')
+  p1.set(['c'], 'c')
+  const p2 = akm(p1.entries())
+  t.same(p2.get(['a', 'b']), 'ab')
+  t.same(p2.get(['c']), 'c')
+  t.end()
+})

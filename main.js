@@ -6,7 +6,7 @@ const dataSymbol = Symbol('path-store-trunk')
 // nodes in the path.  The data key being a symbol ensures the user-provided
 // keys cannot collide with it.
 
-const construct = () => {
+const construct = (initialEntries=[]) => {
 
   const rootStore = new Map()
   let size = 0
@@ -130,6 +130,9 @@ const construct = () => {
     get [Symbol.toStringTag] () { return 'ArrayKeyedMap' },
   }
   Object.defineProperty(store, 'size', { get: () => size })
+
+  for (const [k, v] of initialEntries) { store.set(k, v) }
+
   return store
 }
 
