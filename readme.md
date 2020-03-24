@@ -1,40 +1,50 @@
 # array-keyed-map [![](https://img.shields.io/npm/v/array-keyed-map.svg?style=flat-square)](https://www.npmjs.com/package/array-keyed-map) [![](https://img.shields.io/travis/anko/array-keyed-map.svg?style=flat-square)](https://travis-ci.org/anko/array-keyed-map) [![](https://img.shields.io/david/anko/array-keyed-map?style=flat-square)](https://david-dm.org/anko/array-keyed-map)
 
-A map which keys are arrays of arbitrary values.  Uses the actual identity of
-the key array entries like `Map` does; not some fragile string-serialisation
-hack.
-
-Implements all `Map` methods, but *does not remember insertion order*.
-
-## Example
+A map which keys are Array "paths" of arbitrary values.  Uses the identity of
+the objects in the key (like `Map` does with a single key); not some fragile
+string-serialisation hack.
 
 ```js
+const arrayKeyedMap = require('array-keyed-map')
 const m = arrayKeyedMap()
 
-m.set(['a', 'b'],       1)
-m.set(['a', 'b', true], 2)
-m.set(['a', ''],        3)
-m.set(['a'],            4)
+const obj = { x: true }
+const objIdentical = { x: true }
+const fun = function() {}
+const reg = /regexp/
 
-m.get(['a', 'b'])       => 1
-m.get(['a', 'b', true]) => 2
-m.get(['a', ''])        => 3
-m.get(['a'])            => 4
+// Set values
+m.set([obj],            1)
+m.set([obj, fun],       2)
+m.set([reg, reg, true], 3)
+m.set([],               4)
+
+// Get values
+console.log( m.get([obj]) )            // => 1
+console.log( m.get([objIdentical]) )   // => undefined
+console.log( m.get([obj, fun]) )       // => 2
+console.log( m.get([reg, reg, true]) ) // => 3
+console.log( m.get([]) )               // => 4
 ```
+
+Implements the same methods as `Map`, with the difference of *not remembering
+insertion order when iterating entries later*.  Stores paths compactly as a
+tree.
 
 ## API
 
-Construct an array-keyed map object:
+### `arrayKeyedMap([iterable])`
 
-```
-const arrayKeyedMap = require('array-keyed-map')
-const akmap = arrayKeyedMap()
-```
+**Arguments:**
 
-The constructor takes no arguments.
+ - (optional) `iterable`: any iterable value of `[key, value]` entries from
+   which to initialise contents
 
-Array keyed maps are iterable, so you can use them in `for`-loops, or pass them
-to `Array.from`, etc.
+**Returns** ArrayKeyedMap `akmap`.
+
+Array keyed maps are iterable, so you can use them in `for`-loops, pass them to
+`Array.from`, pass them into the constructor to create a copy (`let copy =
+arrayKeyedMap(akmap)`), etc.  (See [`.entries`](#akmapentries).)
 
 ### `akmap.set(array, value)`
 
@@ -165,11 +175,6 @@ ES2015—it uses [`Map`](http://kangax.github.io/compat-table/es6/#test-Map)s an
 [`Symbol`](http://kangax.github.io/compat-table/es6/#test-Symbol)s (← caniuse
 links).  At time of writing, it works in any recent Node.js or browser.  Except
 IE, of course.
-
-### Does this implement the full `Map` API?
-
-No.  See [related issue](https://github.com/anko/array-keyed-map/issues/1).
-I'd take a PR though! :stars:
 
 ## License
 
