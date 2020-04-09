@@ -287,6 +287,29 @@ test('iterators', (t) => {
 
 })
 
+test('hasPrefix', (t) => {
+  // Even the empty map has the empty prefix
+  const pEmpty = akm()
+
+  t.ok(pEmpty.hasPrefix([]))
+
+  // - - -
+
+  const p = akm()
+  p.set(['a', 'b', 'c'], 'abc')
+  p.set(['c'], 'c')
+
+  t.ok(p.hasPrefix([]))
+  t.ok(p.hasPrefix(['a']))
+  t.ok(p.hasPrefix(['a', 'b']))
+  t.ok(p.hasPrefix(['a', 'b', 'c']))
+  t.ok(!p.hasPrefix(['a', 'b', 'c', 'd']))
+  t.ok(!p.hasPrefix(['b']))
+  t.ok(p.hasPrefix(['c']))
+
+  t.end()
+})
+
 test('constructor property', (t) => {
   const p = akm()
   t.same(p.constructor, akm)

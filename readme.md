@@ -95,6 +95,15 @@ Deletes all entries from `akmap`.
 
 **Returns** `undefined`.
 
+### `akmap.hasPrefix(array)`
+
+**Arguments:**
+
+ - `array`: `Array` of values
+
+**Returns** a Boolean: whether the map has some key starting with values
+matching the given array.
+
 ### `akmap.entries()`
 
 **Returns** an iterator that yields `[key, value]` for every entry in `akmap`.

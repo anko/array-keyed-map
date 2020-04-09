@@ -92,6 +92,23 @@ const construct = (initialEntries=[]) => {
     size = 0
   }
 
+  const hasPrefix = (path, store=rootStore) => {
+    switch (path.length) {
+      case 0:
+        return true
+        break
+      default:
+        const [next, ...rest] = path
+        const nextStore = store.get(next)
+        if (nextStore) {
+          return hasPrefix(rest, nextStore)
+        } else {
+          return false
+        }
+        break
+    }
+  }
+
   const entries = function* (path=[], store=rootStore) {
 
     for (const [key, value] of store) {
@@ -116,7 +133,7 @@ const construct = (initialEntries=[]) => {
 
   const store = {
     // Query and modification
-    set, has, get, delete:del, clear,
+    set, has, get, delete:del, clear, hasPrefix,
 
     // Iterators
     entries,
