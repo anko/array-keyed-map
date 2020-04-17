@@ -35,7 +35,6 @@ const construct = (initialEntries=[]) => {
     switch (path.length) {
       case 0:
         return store.has(dataSymbol)
-        break
       default:
         const [next, ...rest] = path
         const nextStore = store.get(next)
@@ -44,7 +43,6 @@ const construct = (initialEntries=[]) => {
         } else {
           return false
         }
-        break
     }
   }
 
@@ -53,16 +51,10 @@ const construct = (initialEntries=[]) => {
     switch (path.length) {
       case 0:
         return store.get(dataSymbol)
-        break
       default:
         const [next, ...rest] = path
         const nextStore = store.get(next)
-        if (nextStore) {
-          return get(rest, nextStore)
-        } else {
-          return undefined
-        }
-        break
+        return nextStore ? get(rest, nextStore) : undefined
     }
   }
 
@@ -76,12 +68,11 @@ const construct = (initialEntries=[]) => {
       default:
         const [next, ...rest] = path
         const nextStore = store.get(next)
-        if (nextStore) {
-          del(rest, nextStore)
-          // If the next store is now empty, prune it
-          if (!nextStore.size) {
-            store.delete(next)
-          }
+        // Since the path is longer than 0, there must be a next store
+        del(rest, nextStore)
+        // If the next store is now empty, prune it
+        if (!nextStore.size) {
+          store.delete(next)
         }
         break
     }
@@ -96,16 +87,10 @@ const construct = (initialEntries=[]) => {
     switch (path.length) {
       case 0:
         return true
-        break
       default:
         const [next, ...rest] = path
         const nextStore = store.get(next)
-        if (nextStore) {
-          return hasPrefix(rest, nextStore)
-        } else {
-          return false
-        }
-        break
+        return nextStore ? hasPrefix(rest, nextStore) : false
     }
   }
 
