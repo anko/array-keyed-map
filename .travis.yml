@@ -3,4 +3,4 @@ node_js:
  - node
 script:
  - npm run-script test-with-coverage
- - npm run-script upload-coverage
+ - npm run-script upload-coverage-report
