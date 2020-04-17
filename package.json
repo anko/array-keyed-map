@@ -4,7 +4,9 @@
   "description": "a map from arrays of values to values",
   "main": "main.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "test-with-coverage": "nyc npm test",
+    "upload-coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,8 @@
   "author": "Antti Korpi <an@cyan.io> (https://cyan.io)",
   "license": "ISC",
   "devDependencies": {
+    "coveralls": "^3.0.11",
+    "nyc": "^15.0.1",
     "tape": "^4.10.1"
   }
 }
