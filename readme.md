@@ -1,4 +1,4 @@
-# array-keyed-map [![](https://img.shields.io/npm/v/array-keyed-map.svg?style=flat-square)](https://www.npmjs.com/package/array-keyed-map) [![](https://img.shields.io/travis/anko/array-keyed-map.svg?style=flat-square)](https://travis-ci.org/anko/array-keyed-map) [![](https://img.shields.io/david/anko/array-keyed-map?style=flat-square)](https://david-dm.org/anko/array-keyed-map)
+# array-keyed-map [![](https://img.shields.io/npm/v/array-keyed-map.svg?style=flat-square)](https://www.npmjs.com/package/array-keyed-map) [![](https://img.shields.io/travis/anko/array-keyed-map.svg?style=flat-square)](https://travis-ci.org/anko/array-keyed-map) [![](https://img.shields.io/coveralls/github/anko/array-keyed-map?style=flat-square)](https://coveralls.io/github/anko/array-keyed-map) [![](https://img.shields.io/david/anko/array-keyed-map?style=flat-square)](https://david-dm.org/anko/array-keyed-map)
 
 A map which keys are Array "paths" of arbitrary values.  Uses the identity of
 the objects in the key (like `Map` does with a single key); not some fragile
