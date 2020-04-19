@@ -6,19 +6,17 @@ const dataSymbol = Symbol('path-store-trunk')
 // nodes in the path.  The data key being a symbol ensures the user-provided
 // keys cannot collide with it.
 
-const construct = (initialEntries=[]) => {
-
+const construct = (initialEntries = []) => {
   const rootStore = new Map()
   let size = 0
 
-  const set = (path, value, store=rootStore) => {
-
+  const set = (path, value, store = rootStore) => {
     switch (path.length) {
       case 0:
         if (!store.has(dataSymbol)) size += 1
         store.set(dataSymbol, value)
         break
-      default:
+      default: {
         const [next, ...rest] = path
         let nextStore = store.get(next)
         if (!nextStore) {
@@ -27,15 +25,15 @@ const construct = (initialEntries=[]) => {
         }
         set(rest, value, nextStore)
         break
+      }
     }
   }
 
-  const has = (path, store=rootStore) => {
-
+  const has = (path, store = rootStore) => {
     switch (path.length) {
       case 0:
         return store.has(dataSymbol)
-      default:
+      default: {
         const [next, ...rest] = path
         const nextStore = store.get(next)
         if (nextStore) {
@@ -43,29 +41,29 @@ const construct = (initialEntries=[]) => {
         } else {
           return false
         }
+      }
     }
   }
 
-  const get = (path, store=rootStore) => {
-
+  const get = (path, store = rootStore) => {
     switch (path.length) {
       case 0:
         return store.get(dataSymbol)
-      default:
+      default: {
         const [next, ...rest] = path
         const nextStore = store.get(next)
         return nextStore ? get(rest, nextStore) : undefined
+      }
     }
   }
 
-  const del = (path, store=rootStore) => {
-
+  const del = (path, store = rootStore) => {
     switch (path.length) {
       case 0:
         store.delete(dataSymbol)
         size -= 1
         break
-      default:
+      default: {
         const [next, ...rest] = path
         const nextStore = store.get(next)
         // Since the path is longer than 0, there must be a next store
@@ -75,6 +73,7 @@ const construct = (initialEntries=[]) => {
           store.delete(next)
         }
         break
+      }
     }
   }
 
@@ -83,33 +82,33 @@ const construct = (initialEntries=[]) => {
     size = 0
   }
 
-  const hasPrefix = (path, store=rootStore) => {
+  const hasPrefix = (path, store = rootStore) => {
     switch (path.length) {
       case 0:
         return true
-      default:
+      default: {
         const [next, ...rest] = path
         const nextStore = store.get(next)
         return nextStore ? hasPrefix(rest, nextStore) : false
-    }
-  }
-
-  const entries = function* (path=[], store=rootStore) {
-
-    for (const [key, value] of store) {
-      if (key === dataSymbol) yield [path, value]
-      else {
-        yield* entries(path.concat([key]), value)
       }
     }
   }
 
-  const keys = function* () {
-    for (const [k, v] of entries()) yield k
+  const entries = function * (path = [], store = rootStore) {
+    for (const [key, value] of store) {
+      if (key === dataSymbol) yield [path, value]
+      else {
+        yield * entries(path.concat([key]), value)
+      }
+    }
   }
 
-  const values = function* () {
-    for (const [k, v] of entries()) yield v
+  const keys = function * () {
+    for (const [k] of entries()) yield k
+  }
+
+  const values = function * () {
+    for (const [, v] of entries()) yield v
   }
 
   const forEach = (callback, thisArg) => {
@@ -118,7 +117,12 @@ const construct = (initialEntries=[]) => {
 
   const store = {
     // Query and modification
-    set, has, get, delete:del, clear, hasPrefix,
+    set,
+    has,
+    get,
+    delete: del,
+    clear,
+    hasPrefix,
 
     // Iterators
     entries,
@@ -129,7 +133,7 @@ const construct = (initialEntries=[]) => {
 
     // Meta
     constructor: construct,
-    get [Symbol.toStringTag] () { return 'ArrayKeyedMap' },
+    get [Symbol.toStringTag] () { return 'ArrayKeyedMap' }
   }
   Object.defineProperty(store, 'size', { get: () => size })
 

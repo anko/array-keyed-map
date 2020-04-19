@@ -3,8 +3,8 @@ const akm = require('./main.js')
 
 test('empty', (t) => {
   const p = akm()
-  t.ok('function' === typeof p.set, 'set is a function')
-  t.ok('function' === typeof p.get, 'get is a function')
+  t.ok(typeof p.set === 'function', 'set is a function')
+  t.ok(typeof p.get === 'function', 'get is a function')
   t.same(
     p.get(['a', 'b']),
     undefined,
@@ -18,7 +18,6 @@ test('set/get path len 0', (t) => {
   t.same(p.get([]), true)
   t.end()
 })
-
 
 test('set/get path len 1', (t) => {
   const p = akm()
@@ -42,9 +41,7 @@ test('empty strings are ok', (t) => {
   t.end()
 })
 
-
 test('any objects work as keys or values', (t) => {
-
   const objects = [
     new Map(),
     new WeakMap(),
@@ -56,7 +53,7 @@ test('any objects work as keys or values', (t) => {
     'hello world',
     false,
     0,
-    () => {},
+    () => {}
   ]
 
   const p = akm()
@@ -118,7 +115,7 @@ test('delete longer paths', (t) => {
     [],
     ['a'],
     ['a', 'b'],
-    ['a', 'b', 'c'],
+    ['a', 'b', 'c']
   ]
 
   paths.forEach((path) => {
@@ -131,7 +128,7 @@ test('delete longer paths', (t) => {
   t.end()
 })
 
-test(`deleting longer paths doesn't affect prefixes`, (t) => {
+test('deleting longer paths doesn\'t affect prefixes', (t) => {
   const p = akm()
 
   p.set(['a', 'b'], 'ab')
@@ -143,7 +140,7 @@ test(`deleting longer paths doesn't affect prefixes`, (t) => {
   t.end()
 })
 
-test(`deleting shorter paths doesn't affect longer continuations`, (t) => {
+test('deleting shorter paths doesn\'t affect longer continuations', (t) => {
   const p = akm()
 
   p.set(['a', 'b'], 'ab')
@@ -155,7 +152,7 @@ test(`deleting shorter paths doesn't affect longer continuations`, (t) => {
   t.end()
 })
 
-test(`has`, (t) => {
+test('has', (t) => {
   const p = akm()
 
   p.set(['a', 'b'], 'ab')
@@ -266,25 +263,24 @@ test('iterators', (t) => {
   })
 
   test('forEach', (t) => {
-    let kvs = []
-    let thisValue = {}
-    let forEachReturnValue = p.forEach(
+    const kvs = []
+    const thisValue = {}
+    const forEachReturnValue = p.forEach(
       function () {
         kvs.push({ thisValue: this, args: Array.from(arguments) })
       },
       thisValue)
     t.same(forEachReturnValue, undefined)
     t.same(kvs, [
-      { thisValue: thisValue, args: [ value1, key1, p ] },
-      { thisValue: thisValue, args: [ value2, key2, p ] },
-      { thisValue: thisValue, args: [ value4, key4, p ] },
-      { thisValue: thisValue, args: [ value3, key3, p ] },
+      { thisValue: thisValue, args: [value1, key1, p] },
+      { thisValue: thisValue, args: [value2, key2, p] },
+      { thisValue: thisValue, args: [value4, key4, p] },
+      { thisValue: thisValue, args: [value3, key3, p] }
     ])
     t.end()
   })
 
   t.end()
-
 })
 
 test('hasPrefix', (t) => {
@@ -318,7 +314,7 @@ test('constructor property', (t) => {
 
 test('@@toStringTag property', (t) => {
   const p = akm()
-  t.same(Object.prototype.toString.call(p), "[object ArrayKeyedMap]")
+  t.same(Object.prototype.toString.call(p), '[object ArrayKeyedMap]')
   t.end()
 })
 

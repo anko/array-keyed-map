@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "node test.js",
+    "posttest": "standard",
     "test-with-coverage": "nyc npm test",
     "upload-coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -28,6 +29,7 @@
   "devDependencies": {
     "coveralls": "^3.0.11",
     "nyc": "^15.0.1",
+    "standard": "^14.3.3",
     "tape": "^4.10.1"
   }
 }
