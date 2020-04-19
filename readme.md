@@ -5,8 +5,8 @@ the objects in the key (like `Map` does with a single key); not some fragile
 string-serialisation hack.
 
 ```js
-const arrayKeyedMap = require('array-keyed-map')
-const m = arrayKeyedMap()
+const ArrayKeyedMap = require('array-keyed-map')
+const m = new ArrayKeyedMap()
 
 const obj = { x: true }
 const objIdentical = { x: true }
@@ -33,7 +33,7 @@ tree.
 
 ## API
 
-### `arrayKeyedMap([iterable])`
+### `new ArrayKeyedMap([iterable])`
 
 **Arguments:**
 
@@ -43,8 +43,8 @@ tree.
 **Returns** ArrayKeyedMap `akmap`.
 
 Array keyed maps are iterable, so you can use them in `for`-loops, pass them to
-`Array.from`, pass them into the constructor to create a copy (`let copy =
-arrayKeyedMap(akmap)`), etc.  (See [`.entries`](#akmapentries).)
+`Array.from`, pass them into the constructor to create a copy (`let copy = new
+ArrayKeyedMap(akmap)`), etc.  (See [`.entries`](#akmapentries).)
 
 ### `akmap.set(array, value)`
 

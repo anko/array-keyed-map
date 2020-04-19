@@ -1,8 +1,8 @@
 const test = require('tape')
-const akm = require('./main.js')
+const AKM = require('./main.js')
 
 test('empty', (t) => {
-  const p = akm()
+  const p = new AKM()
   t.ok(typeof p.set === 'function', 'set is a function')
   t.ok(typeof p.get === 'function', 'get is a function')
   t.same(
@@ -13,28 +13,28 @@ test('empty', (t) => {
 })
 
 test('set/get path len 0', (t) => {
-  const p = akm()
+  const p = new AKM()
   p.set([], true)
   t.same(p.get([]), true)
   t.end()
 })
 
 test('set/get path len 1', (t) => {
-  const p = akm()
+  const p = new AKM()
   p.set(['a'], true)
   t.same(p.get(['a']), true)
   t.end()
 })
 
 test('set/get path len 2', (t) => {
-  const p = akm()
+  const p = new AKM()
   p.set(['a', 'b'], true)
   t.same(p.get(['a', 'b']), true)
   t.end()
 })
 
 test('empty strings are ok', (t) => {
-  const p = akm()
+  const p = new AKM()
   p.set(['', ''], true)
   t.same(p.get(['']), undefined)
   t.same(p.get(['', '']), true)
@@ -56,7 +56,7 @@ test('any objects work as keys or values', (t) => {
     () => {}
   ]
 
-  const p = akm()
+  const p = new AKM()
   const str = (x) => Object.prototype.toString.call(x).slice(8, -1)
 
   // Try all combinations of two things from the pool of objects as array elements, and values
@@ -98,7 +98,7 @@ test('any objects work as keys or values', (t) => {
 })
 
 test('set and delete empty path', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   p.set([], true)
 
@@ -109,7 +109,7 @@ test('set and delete empty path', (t) => {
 })
 
 test('delete longer paths', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   const paths = [
     [],
@@ -129,7 +129,7 @@ test('delete longer paths', (t) => {
 })
 
 test('deleting longer paths doesn\'t affect prefixes', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   p.set(['a', 'b'], 'ab')
   p.set(['a'], 'a')
@@ -141,7 +141,7 @@ test('deleting longer paths doesn\'t affect prefixes', (t) => {
 })
 
 test('deleting shorter paths doesn\'t affect longer continuations', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   p.set(['a', 'b'], 'ab')
   p.set(['a'], 'a')
@@ -153,7 +153,7 @@ test('deleting shorter paths doesn\'t affect longer continuations', (t) => {
 })
 
 test('has', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   p.set(['a', 'b'], 'ab')
 
@@ -167,7 +167,7 @@ test('has', (t) => {
 })
 
 test('size', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   p.set(['a', 'b', 'c'], 'abc')
   t.same(p.size, 1)
@@ -188,7 +188,7 @@ test('size', (t) => {
 })
 
 test('clear', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   p.set(['a', 'b', 'c'], 'abc')
   p.set(['a'], 'a')
@@ -206,7 +206,7 @@ test('clear', (t) => {
 })
 
 test('iterators', (t) => {
-  const p = akm()
+  const p = new AKM()
 
   const key1 = []
   const value1 = 'empty path'
@@ -285,13 +285,13 @@ test('iterators', (t) => {
 
 test('hasPrefix', (t) => {
   // Even the empty map has the empty prefix
-  const pEmpty = akm()
+  const pEmpty = new AKM()
 
   t.ok(pEmpty.hasPrefix([]))
 
   // - - -
 
-  const p = akm()
+  const p = new AKM()
   p.set(['a', 'b', 'c'], 'abc')
   p.set(['c'], 'c')
 
@@ -307,22 +307,22 @@ test('hasPrefix', (t) => {
 })
 
 test('constructor property', (t) => {
-  const p = akm()
-  t.same(p.constructor, akm)
+  const p = new AKM()
+  t.same(p.constructor, AKM)
   t.end()
 })
 
 test('@@toStringTag property', (t) => {
-  const p = akm()
+  const p = new AKM()
   t.same(Object.prototype.toString.call(p), '[object ArrayKeyedMap]')
   t.end()
 })
 
 test('construct copy by passing entries of previous to constructor', (t) => {
-  const p1 = akm()
+  const p1 = new AKM()
   p1.set(['a', 'b'], 'ab')
   p1.set(['c'], 'c')
-  const p2 = akm(p1.entries())
+  const p2 = new AKM(p1.entries())
   t.same(p2.get(['a', 'b']), 'ab')
   t.same(p2.get(['c']), 'c')
   t.end()

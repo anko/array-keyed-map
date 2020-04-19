@@ -1,145 +1,154 @@
 const dataSymbol = Symbol('path-store-trunk')
 
-// We keep a tree that represents potential paths through the object.  Each
-// tree node is a Map with a Symbol key that corresponds to the value stored at
-// the path terminating at this node.  All the other keys refer to further
-// nodes in the path.  The data key being a symbol ensures the user-provided
-// keys cannot collide with it.
+// Overall strategy:  Keep a tree that represents potential paths through the
+// object.  Each tree node is a Map with a Symbol key that corresponds to the
+// value stored at the path terminating at this node.  All the other keys refer
+// to further nodes in the path.  The data key being a symbol ensures the
+// user-provided keys cannot collide with it.
 
-const construct = (initialEntries = []) => {
-  const rootStore = new Map()
-  let size = 0
+//
+// This class represents the external API
+//
 
-  const set = (path, value, store = rootStore) => {
-    switch (path.length) {
-      case 0:
-        if (!store.has(dataSymbol)) size += 1
-        store.set(dataSymbol, value)
-        break
-      default: {
-        const [next, ...rest] = path
-        let nextStore = store.get(next)
-        if (!nextStore) {
-          nextStore = new Map()
-          store.set(next, nextStore)
-        }
-        set(rest, value, nextStore)
-        break
-      }
-    }
+class ArrayKeyedMap {
+  constructor (initialEntries = []) {
+    this._root = new Map()
+    this._size = 0
+    for (const [k, v] of initialEntries) { this.set(k, v) }
   }
 
-  const has = (path, store = rootStore) => {
-    switch (path.length) {
-      case 0:
-        return store.has(dataSymbol)
-      default: {
-        const [next, ...rest] = path
-        const nextStore = store.get(next)
-        if (nextStore) {
-          return has(rest, nextStore)
-        } else {
-          return false
-        }
-      }
-    }
+  set (path, value) { set(path, value, this._root, this) }
+
+  has (path) { return has(path, this._root, this) }
+
+  get (path) { return get(path, this._root, this) }
+
+  delete (path) { del(path, this._root, this) }
+
+  get size () { return this._size }
+
+  clear () {
+    this._root.clear()
+    this._size = 0
   }
 
-  const get = (path, store = rootStore) => {
-    switch (path.length) {
-      case 0:
-        return store.get(dataSymbol)
-      default: {
-        const [next, ...rest] = path
-        const nextStore = store.get(next)
-        return nextStore ? get(rest, nextStore) : undefined
-      }
-    }
-  }
+  hasPrefix (path) { return hasPrefix(path, this._root, this) }
 
-  const del = (path, store = rootStore) => {
-    switch (path.length) {
-      case 0:
-        store.delete(dataSymbol)
-        size -= 1
-        break
-      default: {
-        const [next, ...rest] = path
-        const nextStore = store.get(next)
-        // Since the path is longer than 0, there must be a next store
-        del(rest, nextStore)
-        // If the next store is now empty, prune it
-        if (!nextStore.size) {
-          store.delete(next)
-        }
-        break
-      }
-    }
-  }
+  get [Symbol.toStringTag] () { return 'ArrayKeyedMap' }
 
-  const clear = () => {
-    rootStore.clear()
-    size = 0
-  }
+  * [Symbol.iterator] () { yield * entries([], this._root) }
 
-  const hasPrefix = (path, store = rootStore) => {
-    switch (path.length) {
-      case 0:
-        return true
-      default: {
-        const [next, ...rest] = path
-        const nextStore = store.get(next)
-        return nextStore ? hasPrefix(rest, nextStore) : false
-      }
-    }
-  }
+  * entries () { yield * entries([], this._root) }
 
-  const entries = function * (path = [], store = rootStore) {
-    for (const [key, value] of store) {
-      if (key === dataSymbol) yield [path, value]
-      else {
-        yield * entries(path.concat([key]), value)
-      }
-    }
-  }
+  * keys () { yield * keys(this._root) }
 
-  const keys = function * () {
-    for (const [k] of entries()) yield k
-  }
+  * values () { yield * values(this._root) }
 
-  const values = function * () {
-    for (const [, v] of entries()) yield v
-  }
-
-  const forEach = (callback, thisArg) => {
-    for (const [k, v] of entries()) callback.call(thisArg, v, k, store)
-  }
-
-  const store = {
-    // Query and modification
-    set,
-    has,
-    get,
-    delete: del,
-    clear,
-    hasPrefix,
-
-    // Iterators
-    entries,
-    [Symbol.iterator]: entries,
-    keys,
-    values,
-    forEach,
-
-    // Meta
-    constructor: construct,
-    get [Symbol.toStringTag] () { return 'ArrayKeyedMap' }
-  }
-  Object.defineProperty(store, 'size', { get: () => size })
-
-  for (const [k, v] of initialEntries) { store.set(k, v) }
-
-  return store
+  forEach (callback, thisArg) { forEach(this._root, callback, thisArg, this) }
 }
 
-module.exports = construct
+module.exports = ArrayKeyedMap
+
+//
+// These stateless functions implement the internals
+//
+
+const set = (path, value, store, main) => {
+  switch (path.length) {
+    case 0:
+      if (!store.has(dataSymbol)) main._size += 1
+      store.set(dataSymbol, value)
+      break
+    default: {
+      const [next, ...rest] = path
+      let nextStore = store.get(next)
+      if (!nextStore) {
+        nextStore = new Map()
+        store.set(next, nextStore)
+      }
+      set(rest, value, nextStore, main)
+      break
+    }
+  }
+}
+
+const has = (path, store, main) => {
+  switch (path.length) {
+    case 0:
+      return store.has(dataSymbol)
+    default: {
+      const [next, ...rest] = path
+      const nextStore = store.get(next)
+      if (nextStore) {
+        return has(rest, nextStore, main)
+      } else {
+        return false
+      }
+    }
+  }
+}
+
+const get = (path, store, main) => {
+  switch (path.length) {
+    case 0:
+      return store.get(dataSymbol)
+    default: {
+      const [next, ...rest] = path
+      const nextStore = store.get(next)
+      return nextStore ? get(rest, nextStore, main) : undefined
+    }
+  }
+}
+
+const del = (path, store, main) => {
+  switch (path.length) {
+    case 0:
+      store.delete(dataSymbol)
+      main._size -= 1
+      break
+    default: {
+      const [next, ...rest] = path
+      const nextStore = store.get(next)
+      // Since the path is longer than 0, there must be a next store
+      del(rest, nextStore, main)
+      // If the next store is now empty, prune it
+      if (!nextStore.size) {
+        store.delete(next)
+      }
+      break
+    }
+  }
+}
+
+const hasPrefix = (path, store) => {
+  switch (path.length) {
+    case 0:
+      return true
+    default: {
+      const [next, ...rest] = path
+      const nextStore = store.get(next)
+      return nextStore ? hasPrefix(rest, nextStore) : false
+    }
+  }
+}
+
+const entries = function * (path, store) {
+  for (const [key, value] of store) {
+    if (key === dataSymbol) yield [path, value]
+    else {
+      yield * entries(path.concat([key]), value)
+    }
+  }
+}
+
+const keys = function * (store) {
+  for (const [k] of entries([], store)) yield k
+}
+
+const values = function * (store) {
+  for (const [, v] of entries([], store)) yield v
+}
+
+const forEach = (store, callback, thisArg, main) => {
+  for (const [k, v] of entries([], store)) callback.call(thisArg, v, k, main)
+}
