@@ -157,30 +157,31 @@ prefixes once.
 
 ### Why is this better than `.join('/')`ing the keys and using a regular object?
 
- - Because your key array's elements might have `/`s in them.  For example, the
-   arrays `['a/b']` and `['a', 'b']` would both resolve to the key `a/b`.
+ 1. Because you might want your key array to contain objects (by identity)
+    rather than strings.  Objects are impossible to stringify in the general
+    case (e.g.  they may contain cyclic references), and even if you make some
+    compromise, two distinct objects with identical contents would stringify to
+    the same value and cause subtle bugs anyway.
 
-   So use something other than a `/`?  Sure, but then you have the same problem
-   with elements possibly containing *that*.
+ 2. Because even if you are only using Strings, your key array's elements might
+    have `/`s in them.  For example, with such a scheme, the arrays `['a/b']`
+    and `['a', 'b']` would both resolve to the key `a/b` and overwrite each
+    other.
 
-   So use a sufficiently long probabilistically unguessable string like
-   `03f2a8291a700b95904190583dba17c4ae1bf3bdfc2834391d60985ac6724940`?  That
-   wastes RAM/disk when you have many long arrays.  And also what the heck are
-   you doing, that's illegal.
+    So use something other than a `/`?  Sure, but then you have the same problem
+    with elements possibly containing *that*.
 
- - Because even an empty `Object` [has built-in properties on
-   it](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-   (e.g. `length`, or `getOwnPropertyNames`), which your keys might
-   accidentally overwrite, causing subtle bugs down the line.
+    So use a sufficiently long probabilistically unguessable string like
+    `03f2a8291a700b95904190583dba17c4ae1bf3bdfc2834391d60985ac6724940`?  That
+    wastes RAM/disk when you have many long arrays.  Also this is the code
+    police speaking, you are under assert for crimes against humanity.
 
- - Because you might want your key array to contain objects (by identity)
-   rather than strings.  Objects are difficult or impossible to stringify (e.g.
-   they may contain cyclic references), and even then two distinct objects with
-   identical contents would stringify to the same value and cause subtle bugs.
+So please use this module instead of such hacks.
 
 ### What version of JS does this rely on?
 
-ES2015—it uses [`Map`](http://kangax.github.io/compat-table/es6/#test-Map)s and
+ES2015 I think—it uses
+[`Map`](http://kangax.github.io/compat-table/es6/#test-Map)s and
 [`Symbol`](http://kangax.github.io/compat-table/es6/#test-Symbol)s (← caniuse
 links).  At time of writing, it works in any recent Node.js or browser.  Except
 IE, of course.
