@@ -1,6 +1,6 @@
 {
   "name": "array-keyed-map",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "a map from arrays of values to values",
   "main": "main.js",
   "scripts": {
