@@ -63,7 +63,7 @@ class ArrayKeyedMap {
     for (const [k, v] of initialEntries) { this.set(k, v) }
   }
 
-  set (path, value) { set(path, value, this._root, this); return this }
+  set (path, value) { return set.call(this, path, value) }
 
   has (path) { return has(path, this._root, this) }
 
@@ -99,23 +99,23 @@ module.exports = ArrayKeyedMap
 // These stateless functions implement the internals
 //
 
-const set = (path, value, store, main) => {
-  switch (path.length) {
-    case 0:
-      if (!store.has(dataSymbol)) main._size += 1
-      store.set(dataSymbol, value)
-      break
-    default: {
-      const [next, ...rest] = path
-      let nextStore = store.get(next)
-      if (!nextStore) {
-        nextStore = new Map()
-        store.set(next, nextStore)
-      }
-      set(rest, value, nextStore, main)
-      break
+function set (path, value) {
+  let map = this._root
+  for (const item of path) {
+    let nextMap = map.get(item)
+    if (!nextMap) {
+      // Create next map if none exists
+      nextMap = new Map()
+      map.set(item, nextMap)
     }
+    map = nextMap
   }
+
+  // Reached end of path.  Set the data symbol to the given value, and
+  // increment size if nothing was here before.
+  if (!map.has(dataSymbol)) this._size += 1
+  map.set(dataSymbol, value)
+  return this
 }
 
 const has = (path, store, main) => {
