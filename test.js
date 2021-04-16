@@ -119,6 +119,14 @@ test('set and delete empty path', (t) => {
   t.end()
 })
 
+test('attempting to delete non-existent path', (t) => {
+  const p = new AKM()
+
+  t.same(p.delete([]), false)
+  t.same(p.size, 0)
+  t.end()
+})
+
 test('delete longer paths', (t) => {
   const p = new AKM()
 
