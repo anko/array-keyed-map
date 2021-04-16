@@ -69,7 +69,7 @@ class ArrayKeyedMap {
 
   get (path) { return get.call(this, path) }
 
-  delete (path) { del(path, this._root, this) }
+  delete (path) { return del(path, this._root, this) }
 
   get size () { return this._size }
 
@@ -142,20 +142,24 @@ function get (path) {
 
 const del = (path, store, main) => {
   switch (path.length) {
-    case 0:
-      store.delete(dataSymbol)
-      main._size -= 1
-      break
+    case 0: {
+      const hadPrevious = store.delete(dataSymbol)
+      if (hadPrevious) {
+        main._size -= 1
+      }
+      return hadPrevious
+    }
     default: {
       const [next, ...rest] = path
       const nextStore = store.get(next)
-      // Since the path is longer than 0, there must be a next store
-      del(rest, nextStore, main)
+      if (!nextStore) return false
+
+      const recursiveCallResult = del(rest, nextStore, main)
       // If the next store is now empty, prune it
       if (!nextStore.size) {
         store.delete(next)
       }
-      break
+      return recursiveCallResult
     }
   }
 }

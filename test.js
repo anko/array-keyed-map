@@ -162,6 +162,16 @@ test('deleting shorter paths doesn\'t affect longer continuations', (t) => {
   t.end()
 })
 
+test('delete return value', t => {
+  const p = new AKM()
+
+  p.set(['x'], 'x')
+  t.same(p.delete(['x']), true, 'delete returns true when entry existed')
+  t.same(p.delete(['x']), false, 'delete returns false when no entry existed')
+
+  t.end()
+})
+
 test('has', (t) => {
   const p = new AKM()
 

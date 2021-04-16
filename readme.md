@@ -88,7 +88,8 @@ they are prefixes or extensions of this one.  Remember to do this if you no
 longer need a array: the keys and values are not automatically
 garbage-collected, even if the objects used as keys go out of scope!
 
-**Returns** `undefined`.
+**Returns** a Boolean: `true` if an entry with that key existed and was
+deleted, or `false` if no such entry was found.
 
 ### `akmap.clear()`
 
