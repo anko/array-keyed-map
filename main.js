@@ -82,15 +82,15 @@ class ArrayKeyedMap {
 
   get [Symbol.toStringTag] () { return 'ArrayKeyedMap' }
 
-  * [Symbol.iterator] () { yield * entries([], this._root) }
+  * [Symbol.iterator] () { yield * entries.call(this) }
 
-  * entries () { yield * entries([], this._root) }
+  * entries () { yield * entries.call(this) }
 
-  * keys () { yield * keys(this._root) }
+  * keys () { yield * keys.call(this) }
 
-  * values () { yield * values(this._root) }
+  * values () { yield * values.call(this) }
 
-  forEach (callback, thisArg) { forEach(this._root, callback, thisArg, this) }
+  forEach (callback, thisArg) { forEach.call(this, callback, thisArg) }
 }
 
 module.exports = ArrayKeyedMap
@@ -184,23 +184,25 @@ function hasPrefix (path) {
   return true
 }
 
-const entries = function * (path, store) {
-  for (const [key, value] of store) {
-    if (key === dataSymbol) yield [path, value]
-    else {
-      yield * entries(path.concat([key]), value)
+function * entries () {
+  const stack = [{ path: [], map: this._root }]
+  while (stack.length > 0) {
+    const { path, map } = stack.pop()
+    for (const [k, v] of map.entries()) {
+      if (k === dataSymbol) yield [path, v]
+      else stack.push({ path: path.concat([k]), map: v })
     }
   }
 }
 
-const keys = function * (store) {
-  for (const [k] of entries([], store)) yield k
+function * keys () {
+  for (const [k] of this.entries()) yield k
 }
 
-const values = function * (store) {
-  for (const [, v] of entries([], store)) yield v
+function * values () {
+  for (const [, v] of this.entries()) yield v
 }
 
-const forEach = (store, callback, thisArg, main) => {
-  for (const [k, v] of entries([], store)) callback.call(thisArg, v, k, main)
+function forEach (callback, thisArg) {
+  for (const [k, v] of this.entries()) callback.call(thisArg, v, k, this)
 }

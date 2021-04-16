@@ -1,5 +1,6 @@
 const test = require('tape')
 const AKM = require('./main.js')
+const assert = require('assert')
 
 test('empty', (t) => {
   const p = new AKM()
@@ -244,41 +245,60 @@ test('iterators', (t) => {
   const value4 = 'ba'
   p.set(key4, value4)
 
-  // Note that entries 3 and 4 come in the opposite order in every iterator.
-  // This is OK, because this module doesn't guarantee iteration order.
+  // We don't guarantee any particular order in which entries are emitted by
+  // iterators.  So to make this test work even if the implementation changes,
+  // we specifically disregard order when checking them.
+  function containsAllOf (t, array, expectedItems) {
+    t.same(
+      array.length,
+      expectedItems.length,
+      'Iterator has right number of elements')
+
+    expectedItems.forEach(expectedItem => {
+      const wasFound = array.some(actualItem => {
+        try {
+          assert.deepStrictEqual(actualItem, expectedItem)
+        } catch (e) {
+          if (e instanceof assert.AssertionError) return false
+          else throw e
+        }
+        return true
+      })
+      t.ok(wasFound, `Iterator contains ${JSON.stringify(expectedItem)}`)
+    })
+  }
+
   test('entries', (t) => {
-    const iterator = p.entries()
-    t.same(iterator.next().value, [key1, value1])
-    t.same(iterator.next().value, [key2, value2])
-    t.same(iterator.next().value, [key4, value4])
-    t.same(iterator.next().value, [key3, value3])
+    containsAllOf(t, [...p.entries()], [
+      [key1, value1],
+      [key2, value2],
+      [key3, value3],
+      [key4, value4]
+    ])
     t.end()
   })
 
   test('@@iterator', (t) => {
-    const a = Array.from(p)
-    t.same(a[0], [key1, value1])
-    t.same(a[1], [key2, value2])
-    t.same(a[2], [key4, value4])
-    t.same(a[3], [key3, value3])
+    containsAllOf(t, Array.from(p), [
+      [key1, value1],
+      [key2, value2],
+      [key3, value3],
+      [key4, value4]
+    ])
     t.end()
   })
 
   test('keys', (t) => {
-    const iterator = p.keys()
-    t.same(iterator.next().value, key1)
-    t.same(iterator.next().value, key2)
-    t.same(iterator.next().value, key4)
-    t.same(iterator.next().value, key3)
+    containsAllOf(t, [...p.keys()], [
+      key1, key2, key3, key4
+    ])
     t.end()
   })
 
   test('values', (t) => {
-    const iterator = p.values()
-    t.same(iterator.next().value, value1)
-    t.same(iterator.next().value, value2)
-    t.same(iterator.next().value, value4)
-    t.same(iterator.next().value, value3)
+    containsAllOf(t, [...p.values()], [
+      value1, value2, value3, value4
+    ])
     t.end()
   })
 
@@ -291,7 +311,7 @@ test('iterators', (t) => {
       },
       thisValue)
     t.same(forEachReturnValue, undefined)
-    t.same(kvs, [
+    containsAllOf(t, kvs, [
       { thisValue: thisValue, args: [value1, key1, p] },
       { thisValue: thisValue, args: [value2, key2, p] },
       { thisValue: thisValue, args: [value4, key4, p] },
