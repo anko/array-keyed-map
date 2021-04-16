@@ -7,8 +7,7 @@
     "test": "node test.js",
     "posttest": "standard",
     "test-with-coverage": "nyc npm test",
-    "upload-coverage-report": "nyc report --reporter=text-lcov | coveralls",
-    "benchmark": "node benchmark.js"
+    "upload-coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -25,7 +24,7 @@
     "path",
     "compound key"
   ],
-  "author": "Antti Korpi <an@cyan.io> (https://cyan.io)",
+  "author": "Antti Korpi",
   "license": "ISC",
   "devDependencies": {
     "benchmark": "^2.1.4",

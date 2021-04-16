@@ -1,5 +1,5 @@
 const Benchmark = require('benchmark')
-const AKM = require('./main.js')
+const AKM = require('../main.js')
 
 const letters = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
@@ -16,7 +16,5 @@ new Benchmark.Suite()
       m.set(Array(100).fill(x), true)
     }
   })
-  .on('cycle', function (ev) {
-    console.log(String(ev.target))
-  })
+  .on('cycle', ev => console.log(String(ev.target)))
   .run()

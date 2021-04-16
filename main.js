@@ -65,7 +65,7 @@ class ArrayKeyedMap {
 
   set (path, value) { return set.call(this, path, value) }
 
-  has (path) { return has(path, this._root, this) }
+  has (path) { return has.call(this, path) }
 
   get (path) { return get(path, this._root, this) }
 
@@ -118,20 +118,17 @@ function set (path, value) {
   return this
 }
 
-const has = (path, store, main) => {
-  switch (path.length) {
-    case 0:
-      return store.has(dataSymbol)
-    default: {
-      const [next, ...rest] = path
-      const nextStore = store.get(next)
-      if (nextStore) {
-        return has(rest, nextStore, main)
-      } else {
-        return false
-      }
+function has (path) {
+  let map = this._root
+  for (const item of path) {
+    const nextMap = map.get(item)
+    if (nextMap) {
+      map = nextMap
+    } else {
+      return false
     }
   }
+  return map.has(dataSymbol)
 }
 
 const get = (path, store, main) => {
