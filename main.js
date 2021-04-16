@@ -67,7 +67,7 @@ class ArrayKeyedMap {
 
   has (path) { return has.call(this, path) }
 
-  get (path) { return get(path, this._root, this) }
+  get (path) { return get.call(this, path) }
 
   delete (path) { del(path, this._root, this) }
 
@@ -131,16 +131,13 @@ function has (path) {
   return map.has(dataSymbol)
 }
 
-const get = (path, store, main) => {
-  switch (path.length) {
-    case 0:
-      return store.get(dataSymbol)
-    default: {
-      const [next, ...rest] = path
-      const nextStore = store.get(next)
-      return nextStore ? get(rest, nextStore, main) : undefined
-    }
+function get (path) {
+  let map = this._root
+  for (const item of path) {
+    map = map.get(item)
+    if (!map) return undefined
   }
+  return map.get(dataSymbol)
 }
 
 const del = (path, store, main) => {
