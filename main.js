@@ -1,10 +1,56 @@
-const dataSymbol = Symbol('path-store-trunk')
+/*
+  # Implementation strategy
 
-// Overall strategy:  Keep a tree that represents potential paths through the
-// object.  Each tree node is a Map with a Symbol key that corresponds to the
-// value stored at the path terminating at this node.  All the other keys refer
-// to further nodes in the path.  The data key being a symbol ensures the
-// user-provided keys cannot collide with it.
+  Create a tree of `Map`s, such that indexing the tree recursively (with items
+  of a key array, sequentially), traverses the tree, so that when the key array
+  is exhausted, the tree node we arrive at contains the value for that key
+  array under the guaranteed-unique `Symbol` key `dataSymbol`.
+
+  ## Example
+
+  Start with an empty `ArrayKeyedMap` tree:
+
+      {
+      }
+
+  Add ['a'] → 1:
+
+      {
+        'a': {
+          [dataSymbol]: 1,
+        },
+      }
+
+  Add [] → 0:
+
+      {
+        [dataSymbol]: 0,
+        'a': {
+          [dataSymbol]: 1,
+        },
+      }
+
+  Add ['a', 'b', 'c', 'd'] → 4:
+
+      {
+        [dataSymbol]: 0,
+        'a': {
+          [dataSymbol]: 1,
+          'b': {
+            'c': {
+              'd': {
+                [dataSymbol]: 4,
+              },
+            },
+          },
+        },
+      }
+
+  String array keys are used in the above example for simplicity.  In reality,
+  we can support any values in array keys, because `Map`s do.
+*/
+
+const dataSymbol = Symbol('path-store-trunk')
 
 //
 // This class represents the external API
