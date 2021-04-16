@@ -69,7 +69,7 @@ class ArrayKeyedMap {
 
   get (path) { return get.call(this, path) }
 
-  delete (path) { return del(path, this._root, this) }
+  delete (path) { return del.call(this, path) }
 
   get size () { return this._size }
 
@@ -140,28 +140,39 @@ function get (path) {
   return map.get(dataSymbol)
 }
 
-const del = (path, store, main) => {
-  switch (path.length) {
-    case 0: {
-      const hadPrevious = store.delete(dataSymbol)
-      if (hadPrevious) {
-        main._size -= 1
-      }
-      return hadPrevious
-    }
-    default: {
-      const [next, ...rest] = path
-      const nextStore = store.get(next)
-      if (!nextStore) return false
+function del (path) {
+  let map = this._root
 
-      const recursiveCallResult = del(rest, nextStore, main)
-      // If the next store is now empty, prune it
-      if (!nextStore.size) {
-        store.delete(next)
-      }
-      return recursiveCallResult
+  // Maintain a stack of maps we visited, so we can go back and trim empty ones
+  // if we delete something.
+  const stack = []
+
+  for (const item of path) {
+    const nextMap = map.get(item)
+    if (nextMap) {
+      stack.unshift({ parent: map, child: nextMap, item })
+      map = nextMap
+    } else {
+      // Nothing to delete
+      return false
     }
   }
+
+  // Reached end of path.  Delete data, if it exists.
+  const hadPreviousValue = map.delete(dataSymbol)
+
+  // If something was deleted, decrement size and go through the stack of
+  // visited maps, trimming any that are now empty.
+  if (hadPreviousValue) {
+    this._size -= 1
+
+    for (const { parent, child, item } of stack) {
+      if (child.size === 0) {
+        parent.delete(item)
+      }
+    }
+  }
+  return hadPreviousValue
 }
 
 const hasPrefix = (path, store) => {
