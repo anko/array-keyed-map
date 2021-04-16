@@ -41,6 +41,16 @@ test('empty strings are ok', (t) => {
   t.end()
 })
 
+test('set returns self, allowing chaining', (t) => {
+  const p = new AKM()
+  p
+    .set(['a'], true)
+    .set(['a', 'b'], true)
+  t.same(p.get(['a']), true)
+  t.same(p.get(['a', 'b']), true)
+  t.end()
+})
+
 test('any objects work as keys or values', (t) => {
   const objects = [
     new Map(),

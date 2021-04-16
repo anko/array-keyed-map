@@ -63,7 +63,7 @@ class ArrayKeyedMap {
     for (const [k, v] of initialEntries) { this.set(k, v) }
   }
 
-  set (path, value) { set(path, value, this._root, this) }
+  set (path, value) { set(path, value, this._root, this); return this }
 
   has (path) { return has(path, this._root, this) }
 

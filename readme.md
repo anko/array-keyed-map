@@ -58,7 +58,8 @@ Sets the value for the given array.
 Objects in the array are treated by identity.  The identity of the array object
 itself is irrelevant.
 
-**Returns** `undefined`.
+**Returns** ArrayKeyedMap `akmap`: a reference to the same map, handy for
+chaining multiple `.set` calls.
 
 ### `akmap.has(array)`
 
