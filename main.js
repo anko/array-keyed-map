@@ -78,7 +78,7 @@ class ArrayKeyedMap {
     this._size = 0
   }
 
-  hasPrefix (path) { return hasPrefix(path, this._root, this) }
+  hasPrefix (path) { return hasPrefix.call(this, path) }
 
   get [Symbol.toStringTag] () { return 'ArrayKeyedMap' }
 
@@ -175,16 +175,13 @@ function del (path) {
   return hadPreviousValue
 }
 
-const hasPrefix = (path, store) => {
-  switch (path.length) {
-    case 0:
-      return true
-    default: {
-      const [next, ...rest] = path
-      const nextStore = store.get(next)
-      return nextStore ? hasPrefix(rest, nextStore) : false
-    }
+function hasPrefix (path) {
+  let map = this._root
+  for (const item of path) {
+    map = map.get(item)
+    if (!map) return false
   }
+  return true
 }
 
 const entries = function * (path, store) {
