@@ -1,8 +1,9 @@
 # array-keyed-map [![](https://img.shields.io/npm/v/array-keyed-map.svg?style=flat-square)](https://www.npmjs.com/package/array-keyed-map) [![](https://img.shields.io/travis/anko/array-keyed-map.svg?style=flat-square)](https://travis-ci.org/anko/array-keyed-map) [![](https://img.shields.io/coveralls/github/anko/array-keyed-map?style=flat-square)](https://coveralls.io/github/anko/array-keyed-map) [![](https://img.shields.io/david/anko/array-keyed-map?style=flat-square)](https://david-dm.org/anko/array-keyed-map)
 
-A map which keys are Array "paths" of arbitrary values.  Uses the identity of
-the objects in the key (like `Map` does with a single key); not some fragile
-string-serialisation hack.
+A map data structure (a.k.a. associative array, dictionary) which maps from
+arrays of arbitrary values ("paths") to arbitrary values.  Like if the JS
+built-in [`Map`][map] took arrays as keys.  Uses the key objects' identities;
+does not stringify anything, [because that way lies madness](#faq).
 
 ```js
 const ArrayKeyedMap = require('array-keyed-map')
@@ -27,9 +28,14 @@ console.log( m.get([reg, reg, true]) ) // => 3
 console.log( m.get([]) )               // => 4
 ```
 
-Implements the same methods as `Map`, with the difference of *not remembering
-insertion order when iterating entries later*.  Stores paths compactly as a
-tree.
+Features:
+
+- Implements all the exact same methods as [`Map`][map], with the only API
+  difference of *not iterating in insertion order*.
+- Stores paths compactly as a tree.  Shared prefixes are stored once only.
+- Algorithms are iterative, because it's faster than recursive.  (I checked.)
+- Thoroughly unit-tested.
+- No dependencies.
 
 ## API
 
@@ -144,41 +150,64 @@ This differs from the basic `Map`!
 
 ## Performance characteristics
 
-`get`, `has`, `set`, and `delete` are all `O(n)` with key array length `n`.  I
-believe this is optimal; O(1) would require the JS runtime to expose the
-identity of all objects as hashable values, which is not currently possible.
+- The paths are stored as a tree.  If multiple paths are stored that share a
+  prefix, the prefix is not duplicated in storage, but shared between them.
+  For example: `['a', 'b']` and `['a', 'c']` have a shared prefix `['a']`.
+  Only 1 instance of `'a'` is stored, with `'b'` and `'c'` branching from it.
 
-Stores paths in a tree structure, to conserve memory when key arrays share a
-prefix.  This means `entries`, `keys`, `values`, and `forEach` are `O(n)` with
-`n` total length of all keys of all entries, only counting shared key-array
-prefixes once.
+  This means any operation involving a path scales linearly with that path's
+  length, as it is traversed.
 
-`clear` is `O(1)`.
+- `.size` is cached.  It does not traverse.
+
+- The algorithms are implemented iteratively, because the VM stack is faster
+  than a JS stack.
 
 ## FAQ
 
-### Why is this better than `.join('/')`ing the keys and using a regular object?
+### Why is this better than stringify → `.join('/')` → regular `Map`?
 
  1. Because you might want your key array to contain objects (by identity)
-    rather than strings.  Objects are impossible to stringify in the general
-    case (e.g.  they may contain cyclic references), and even if you make some
-    compromise, two distinct objects with identical contents would stringify to
-    the same value and cause subtle bugs anyway.
+    rather than strings, and objects cannot be stringified by identity, so
+    identical objects would get mixed up.  But this module can handle that:
 
- 2. Because even if you are only using Strings, your key array's elements might
-    have `/`s in them.  For example, with such a scheme, the arrays `['a/b']`
-    and `['a', 'b']` would both resolve to the key `a/b` and overwrite each
-    other.
+    ```js
+    let akmap = new ArrayKeyedMap()
+    // These are distinct paths!
+    let path1 = [{}, {}, {}]
+    let path2 = [{}, {}, {}]
+    akmap.set(path1, 1)
+    akmap.set(path2, 2)
+    console.log(akmap.get(path1)) // → 1
+    console.log(akmap.get(path2)) // → 2
+    ```
 
-    So use something other than a `/`?  Sure, but then you have the same problem
-    with elements possibly containing *that*.
+ 2. Even if you only care about the object's content (and not identity),
+    objects may contain cyclic references, which can't be stringified in
+    isolation.  But this module can handle that.
 
-    So use a sufficiently long probabilistically unguessable string like
+    ```
+    let akmap = new ArrayKeyedMap()
+    let cyclic = {}
+    // Contains a reference to itself.  How would you stringify this?
+    cyclic.x = cyclic
+    akmap.set([ cyclic ], 1)
+    console.log(akmap.get(cyclic)) // → 1
+    ```
+
+ 3. Even if you are only using string keys, the separator you choose (e.g. `/`)
+    may appear as part of your path elements, so the arrays `['a/b']` and
+    `['a', 'b']` would both resolve to the key `a/b` and overwrite each other.
+
+    So use a separator other than `/`?  Sure, but then you have the same
+    problem with elements possibly containing *that*.
+
+    So use a sufficiently long probabilistically unguessable separator like
     `03f2a8291a700b95904190583dba17c4ae1bf3bdfc2834391d60985ac6724940`?  That
-    wastes RAM/disk when you have many long arrays.  Also this is the code
-    police speaking, you are under assert for crimes against humanity.
+    wastes RAM/disk.  Also this is the code police speaking, you are under
+    assert for crimes against humanity, go to BSD jail.
 
-So please use this module instead of such hacks.
+So please use this module instead of a hack.
 
 ### What version of JS does this rely on?
 
@@ -191,3 +220,5 @@ IE, of course.
 ## License
 
 [ISC](https://opensource.org/licenses/isc).
+
+[map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
