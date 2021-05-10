@@ -4,6 +4,9 @@ A map data structure (a.k.a. associative array, dictionary) which maps from
 arrays of arbitrary values ("paths") to arbitrary values.  Like if the JS
 built-in [`Map`][map] took arrays as keys.  Uses the key objects' identities;
 does not stringify anything, [because that way lies madness](#faq).
+<!-- !test program node test-readme-example.js -->
+
+<!-- !test check initial example -->
 
 ```js
 const ArrayKeyedMap = require('array-keyed-map')
@@ -171,11 +174,13 @@ This differs from the basic `Map`!
     rather than strings, and objects cannot be stringified by identity, so
     identical objects would get mixed up.  But this module can handle that:
 
+    <!-- !test check by identity -->
+
     ```js
     let akmap = new ArrayKeyedMap()
     // These are distinct paths!
-    let path1 = [{}, {}, {}]
-    let path2 = [{}, {}, {}]
+    const path1 = [{}, {}, {}]
+    const path2 = [{}, {}, {}]
     akmap.set(path1, 1)
     akmap.set(path2, 2)
     console.log(akmap.get(path1)) // → 1
@@ -186,9 +191,11 @@ This differs from the basic `Map`!
     objects may contain cyclic references, which can't be stringified in
     isolation.  But this module can handle that.
 
+    <!-- !test check cyclic -->
+
     ```
-    let akmap = new ArrayKeyedMap()
-    let cyclic = {}
+    const akmap = new ArrayKeyedMap()
+    const cyclic = {}
     // Contains a reference to itself.  How would you stringify this?
     cyclic.x = cyclic
     akmap.set([ cyclic ], 1)
