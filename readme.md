@@ -192,7 +192,7 @@ This differs from the basic `Map`!
     // Contains a reference to itself.  How would you stringify this?
     cyclic.x = cyclic
     akmap.set([ cyclic ], 1)
-    console.log(akmap.get(cyclic)) // → 1
+    console.log(akmap.get([ cyclic ])) // → 1
     ```
 
  3. Even if you are only using string keys, the separator you choose (e.g. `/`)
