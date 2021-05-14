@@ -9,7 +9,7 @@ does not stringify anything, [because that way lies madness](#faq).
 <!-- !test check initial example -->
 
 ```js
-const ArrayKeyedMap = require('array-keyed-map')
+import ArrayKeyedMap from 'array-keyed-map'
 const m = new ArrayKeyedMap()
 
 const obj = { x: true }

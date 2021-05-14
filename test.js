@@ -1,6 +1,6 @@
-const test = require('tape')
-const AKM = require('./main.js')
-const assert = require('assert')
+import test from 'tape'
+import AKM from './main.js'
+import assert from 'assert'
 
 test('empty', (t) => {
   const p = new AKM()
@@ -210,7 +210,9 @@ test('size', (t) => {
   p.delete(['a'])
   t.same(p.size, 2)
 
-  p.size = 0
+  t.throws(() => {
+    p.size = 0
+  })
   t.same(p.size, 2)
 
   t.end()

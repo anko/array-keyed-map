@@ -2,14 +2,15 @@
   "name": "array-keyed-map",
   "version": "2.1.0",
   "description": "a map from arrays of values to values",
-  "main": "main.js",
+  "type": "module",
+  "exports": "./main.js",
   "scripts": {
-    "test": "npm run test-code && npm run test-docs",
+    "test": "npm run test-with-coverage && npm run test-docs",
     "test-docs": "txm readme.md",
     "test-code": "node test.js",
     "posttest": "standard",
-    "test-with-coverage": "nyc node test.js",
-    "upload-coverage-report": "nyc report --reporter=text-lcov | coveralls"
+    "test-with-coverage": "c8 node test.js",
+    "upload-coverage-report": "c8 report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -28,10 +29,13 @@
   ],
   "author": "Antti Korpi",
   "license": "ISC",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
   "devDependencies": {
     "benchmark": "^2.1.4",
+    "c8": "^7.7.2",
     "coveralls": "^3.1.0",
-    "nyc": "^15.1.0",
     "standard": "^16.0.3",
     "tape": "^5.2.2",
     "txm": "^7.4.5"

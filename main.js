@@ -93,7 +93,7 @@ class ArrayKeyedMap {
   forEach (callback, thisArg) { forEach.call(this, callback, thisArg) }
 }
 
-module.exports = ArrayKeyedMap
+export default ArrayKeyedMap
 
 //
 // These stateless functions implement the internals
