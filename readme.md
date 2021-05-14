@@ -193,7 +193,7 @@ This differs from the basic `Map`!
 
     <!-- !test check cyclic -->
 
-    ```
+    ```js
     const akmap = new ArrayKeyedMap()
     const cyclic = {}
     // Contains a reference to itself.  How would you stringify this?
