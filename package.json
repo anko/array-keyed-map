@@ -30,10 +30,10 @@
   "license": "ISC",
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "coveralls": "^3.1.0",
+    "coveralls": "^3.1.1",
     "nyc": "^15.1.0",
     "standard": "^16.0.3",
-    "tape": "^5.2.2",
+    "tape": "^5.3.1",
     "txm": "^7.4.6"
   }
 }
