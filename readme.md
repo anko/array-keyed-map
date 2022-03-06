@@ -4,6 +4,7 @@ A map data structure (a.k.a. associative array, dictionary) which maps from
 arrays of arbitrary values ("paths") to arbitrary values.  Like if the JS
 built-in [`Map`][map] took arrays as keys.  Uses the key objects' identities;
 does not stringify anything, [because that way lies madness](#faq).
+
 <!-- !test program node test-readme-example.js -->
 
 <!-- !test check initial example -->
@@ -33,8 +34,8 @@ console.log( m.get([]) )               // => 4
 
 Features:
 
-- Implements all the exact same methods as [`Map`][map], with the only API
-  difference of *not iterating in insertion order*.
+- Implements all the same methods as [`Map`][map], with the only API difference
+  of *not iterating in insertion order*.
 - Stores paths compactly as a tree.  Shared prefixes are stored once only.
 - Algorithms are iterative, because it's faster than recursive.  (I checked.)
 - Thoroughly unit-tested.
@@ -161,7 +162,7 @@ This differs from the basic `Map`!
   This means any operation involving a path scales linearly with that path's
   length, as it is traversed.
 
-- `.size` is cached.  It does not traverse.
+- `.size` is cached, so it does not traverse the data structure.
 
 - The algorithms are implemented iteratively, because the VM stack is faster
   than a JS stack.
@@ -223,6 +224,15 @@ ES2015 I think—it uses
 [`Symbol`](http://kangax.github.io/compat-table/es6/#test-Symbol)s (← caniuse
 links).  At time of writing, it works in any recent Node.js or browser.  Except
 IE, of course.
+
+## Development
+
+Pull requests with improvements of any size are appreciated.  If anything about
+the code or documentation is unclear, do ask.
+
+To install the testing dependencies, run `npm install`.
+
+To run the automated tests and coding style check, run `npm test`.
 
 ## License
 
