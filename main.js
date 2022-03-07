@@ -101,6 +101,7 @@ module.exports = ArrayKeyedMap
 
 function set (path, value) {
   let map = this._root
+  if (!Array.isArray(path)) { path = [path] }
   for (const item of path) {
     let nextMap = map.get(item)
     if (!nextMap) {
@@ -120,6 +121,7 @@ function set (path, value) {
 
 function has (path) {
   let map = this._root
+  if (!Array.isArray(path)) { path = [path] }
   for (const item of path) {
     const nextMap = map.get(item)
     if (nextMap) {
@@ -133,6 +135,7 @@ function has (path) {
 
 function get (path) {
   let map = this._root
+  if (!Array.isArray(path)) { path = [path] }
   for (const item of path) {
     map = map.get(item)
     if (!map) return undefined
@@ -147,6 +150,7 @@ function del (path) {
   // if we delete something.
   const stack = []
 
+  if (!Array.isArray(path)) { path = [path] }
   for (const item of path) {
     const nextMap = map.get(item)
     if (nextMap) {
@@ -177,6 +181,7 @@ function del (path) {
 
 function hasPrefix (path) {
   let map = this._root
+  if (!Array.isArray(path)) { path = [path] }
   for (const item of path) {
     map = map.get(item)
     if (!map) return false
