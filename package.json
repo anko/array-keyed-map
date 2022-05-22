@@ -8,8 +8,7 @@
     "test-docs": "txm readme.md",
     "test-code": "node test.js",
     "posttest": "standard",
-    "test-with-coverage": "nyc node test.js",
-    "upload-coverage-report": "nyc report --reporter=text-lcov | coveralls"
+    "test-with-coverage": "c8 npm run-script test-code"
   },
   "repository": {
     "type": "git",
@@ -30,8 +29,7 @@
   "license": "ISC",
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "coveralls": "^3.1.1",
-    "nyc": "^15.1.0",
+    "c8": "^7.11.3",
     "standard": "^17.0.0",
     "tape": "^5.3.1",
     "txm": "^8.0.2"
