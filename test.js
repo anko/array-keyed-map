@@ -320,10 +320,10 @@ test('iterators', (t) => {
       thisValue)
     t.same(forEachReturnValue, undefined)
     containsAllOf(t, kvs, [
-      { thisValue: thisValue, args: [value1, key1, p] },
-      { thisValue: thisValue, args: [value2, key2, p] },
-      { thisValue: thisValue, args: [value4, key4, p] },
-      { thisValue: thisValue, args: [value3, key3, p] }
+      { thisValue, args: [value1, key1, p] },
+      { thisValue, args: [value2, key2, p] },
+      { thisValue, args: [value4, key4, p] },
+      { thisValue, args: [value3, key3, p] }
     ])
     t.end()
   })
