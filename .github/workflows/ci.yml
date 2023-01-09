@@ -16,8 +16,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dcodeIO/setup-node-nvm@v4
+      - uses: actions/checkout@v3
+      - uses: dcodeIO/setup-node-nvm@v5
         with:
           node-version: lts/*
 
