@@ -27,6 +27,15 @@ test('set/get path len 1', (t) => {
   t.end()
 })
 
+test('set/get non-array acts like len 1', (t) => {
+  const p = new AKM()
+  p.set('abc', true)
+  t.same(p.get(['abc']), true)
+  p.set(['def'], true)
+  t.same(p.get('def'), true)
+  t.end()
+})
+
 test('set/get path len 2', (t) => {
   const p = new AKM()
   p.set(['a', 'b'], true)
@@ -181,6 +190,16 @@ test('delete return value', t => {
   t.end()
 })
 
+test('delete supports non-array key', t => {
+  const p = new AKM()
+
+  p.set(['x'], 'x')
+  t.same(p.delete('x'), true, 'delete returns true when entry existed')
+  t.same(p.delete('x'), false, 'delete returns false when no entry existed')
+
+  t.end()
+})
+
 test('has', (t) => {
   const p = new AKM()
 
@@ -188,9 +207,11 @@ test('has', (t) => {
 
   t.same(p.has(['a', 'b']), true)
   t.same(p.has(['a']), false)
+  t.same(p.has('a'), false)
 
   p.set(['a'], 'a')
   t.same(p.has(['a']), true)
+  t.same(p.has('a'), true)
 
   t.end()
 })
@@ -342,14 +363,17 @@ test('hasPrefix', (t) => {
   const p = new AKM()
   p.set(['a', 'b', 'c'], 'abc')
   p.set(['c'], 'c')
+  p.set([123, 456], 'd')
 
   t.ok(p.hasPrefix([]))
+  t.ok(p.hasPrefix(['a']))
   t.ok(p.hasPrefix(['a']))
   t.ok(p.hasPrefix(['a', 'b']))
   t.ok(p.hasPrefix(['a', 'b', 'c']))
   t.ok(!p.hasPrefix(['a', 'b', 'c', 'd']))
   t.ok(!p.hasPrefix(['b']))
   t.ok(p.hasPrefix(['c']))
+  t.ok(p.hasPrefix(123))
 
   t.end()
 })
